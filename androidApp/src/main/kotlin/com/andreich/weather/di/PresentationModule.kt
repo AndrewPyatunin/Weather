@@ -1,0 +1,11 @@
+package com.andreich.weather.di
+
+import com.andreich.weather.presentation.weatherlist.WeatherListViewModel
+import org.koin.core.module.dsl.viewModel
+import org.koin.dsl.module
+
+val presentationModule = module {
+    viewModel<WeatherListViewModel> {
+        WeatherListViewModel(get(), get())
+    }
+}

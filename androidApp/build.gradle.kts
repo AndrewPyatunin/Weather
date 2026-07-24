@@ -23,6 +23,15 @@ dependencies {
     implementation(libs.compose.uiToolingPreview)
     implementation(libs.androidx.navigation.compose)
     debugImplementation(libs.compose.uiTooling)
+    implementation(libs.androidx.room.runtime)
+
+    implementation(libs.koin.compose.viewmodel)
+    implementation(libs.koin.compose)
+    implementation(libs.koin.core)
+    implementation(libs.koin.android)
+
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.content.negotiation)
 }
 
 android {
