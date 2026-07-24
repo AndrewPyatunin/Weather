@@ -6,7 +6,7 @@ import com.andreich.weather.network.ResponseDto
 fun ResponseDto.toCityWeather(id: Int, name: String, lang: String, population: Int): CityWeather {
     return CityWeather(
         id = id,
-        name = name,
+        name = this.name ?: name,
         lon = coordDto?.lon ?: 0.0,
         lat = coordDto?.lat ?: 0.0,
         temp = mainDto?.temp ?: 0.0,

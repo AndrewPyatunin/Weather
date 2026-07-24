@@ -37,16 +37,21 @@ class WeatherApi(
         }.body()
     }
 
+    private fun String.normalizeCityName(): String =
+        trim()
+            .replace("'", "")
+            .replace(Regex("\\s+"), " ")
+
     suspend fun getWeatherForCity(name: String, lang: String = RU): ResponseDto {
         return client.get {
             url {
                 path(CURRENT_WEATHER)
                 parameters.apply {
-                    append(QUERY, name)
+                    append(QUERY, name.normalizeCityName())
                     append(UNITS, METRIC)
                     append(LANG, lang)
                 }
             }
-        }.body()
+        }.body<ResponseDto>()
     }
 }

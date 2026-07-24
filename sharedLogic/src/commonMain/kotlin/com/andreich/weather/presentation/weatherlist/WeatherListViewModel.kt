@@ -56,7 +56,7 @@ class WeatherListViewModel(
                     _state.update { it.copy(menuExpanded = !it.menuExpanded) }
                 }
                 WeatherListIntent.UpdateWeather -> {
-                    val result = updateCityWeatherListUseCase(state.value.lang, state.value.country)
+                    val result = updateCityWeatherListUseCase(lang = state.value.lang, country = state.value.country)
                     when (result) {
                         is RequestResult.Failure.InvalidApiKey -> onRequestError(result.message)
                         is RequestResult.Failure.InvalidParams -> onRequestError(result.message)

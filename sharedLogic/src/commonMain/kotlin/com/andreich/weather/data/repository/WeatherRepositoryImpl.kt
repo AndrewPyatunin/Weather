@@ -1,5 +1,6 @@
 package com.andreich.weather.data.repository
 
+import com.andreich.weather.core.WeatherLogger
 import com.andreich.weather.data.datasource.CityDatasource
 import com.andreich.weather.data.datasource.CityDto
 import com.andreich.weather.data.mapper.toCityWeather
@@ -15,6 +16,9 @@ import com.andreich.weather.domain.model.RequestType
 import com.andreich.weather.domain.repository.WeatherRepository
 import com.andreich.weather.network.WeatherApi
 import com.andreich.weather.network.safeApiCall
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlin.time.Clock
@@ -58,35 +62,47 @@ class WeatherRepositoryImpl(
     }
 
     private suspend fun searchCityApiCall(lang: String, name: String): List<CityWeather> {
-        return getCities(lang = lang, name = name).map {
+        return getCities(lang = lang).map {
             weatherApi.getWeatherForCity(name, lang).toCityWeather(it.id, name, lang, it.population)
         }
     }
 
-    private suspend fun getCities(lang: String, name: String = "", country: String? = null): List<CityDto> {
+    private suspend fun getCities(lang: String, country: String = "ru"): List<CityDto> {
         return when (lang) {
             "ru" -> {
-                cityDatasource.buildCitiesData()
+                cityDatasource.buildCitiesData().filter { it.iso2.lowercase() == country }.sortedByDescending { it.population }.take(60).apply {
+                    WeatherLogger().log("WEATHER_build_list", this.toString())
+                }
             }
 
             "en" -> {
-                cityDatasource.buildCitiesData().filter { it.name.contains(name) }.apply {
-                    country?.let { filter { it.country == country } }
-                }
+                cityDatasource.buildCitiesData().filter { it.iso2.lowercase() == "us" }.sortedByDescending { it.population }.take(60)
             }
 
             else -> emptyList()
         }
     }
-    private suspend fun getCitiesApiCall(lang: String, country: String): List<CityWeather> {
-        return getCities(lang = lang, country = country).map {
-            weatherApi.getWeather(lang, it.lat, it.lng)
-                .toCityWeather(it.id, it.name, lang, it.population)
+    private suspend fun getCitiesApiCall(lang: String, country: String): List<CityWeather> =
+        coroutineScope {
+            val weatherLogger = WeatherLogger()
+            getCities(lang = lang, country = country).map { city ->
+                weatherLogger.log("WEATHER_API_START", city.name)
+                async {
+                    runCatching {
+//                        weatherApi.getWeather(lang = lang, lat = city.lat, lon = city.lng).toCityWeather(city.id, city.name, lang, city.population)
+                            weatherApi.getWeatherForCity(lang = lang, name = city.name)
+                                .toCityWeather(city.id, city.name, lang, city.population)
+                    }.onFailure {
+                        weatherLogger.log("WEATHER_ERROR", it.stackTraceToString())
+                    }.getOrNull()
+                }
+            }.awaitAll()
+                .filterNotNull()
         }
-    }
 
     private suspend fun getRequestResult(type: RequestType, apiCall: suspend () -> List<CityWeather>): RequestResult {
         return safeApiCall(apiCall) { list ->
+            WeatherLogger().log("WEATHER_LIST_TO_DB", list.toString())
             cacheDao.insertCacheData(CacheEntity(type))
             weatherDao.addCitiesWeatherList(list.map { it.toCityWeatherEntity() })
         }

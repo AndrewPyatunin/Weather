@@ -1,12 +1,21 @@
 package com.andreich.weather.data.datasource
 
 import android.content.Context
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import weather.sharedlogic.generated.resources.Res
 
 actual class CityDatasource(
     val context: Context
 ) {
+
+    init {
+        CoroutineScope(Dispatchers.Default).launch {
+            buildCitiesData()
+        }
+    }
 
     private var citiesList: List<CityDto> = emptyList()
     private val json = Json { ignoreUnknownKeys = true }
@@ -18,7 +27,7 @@ actual class CityDatasource(
             synchronized(Unit) {
                 if (citiesList.isEmpty()) {
                     citiesList =
-                        json.decodeFromString<List<CityDto>>(citiesText)//.associateBy { it.name.trim().lowercase() }
+                        json.decodeFromString<List<CityDto>>(citiesText)
                 }
                 return citiesList
             }

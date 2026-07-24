@@ -1,5 +1,8 @@
 package com.andreich.weather.domain.model
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class CityWeather(
     val id: Int,
     val lon: Double,

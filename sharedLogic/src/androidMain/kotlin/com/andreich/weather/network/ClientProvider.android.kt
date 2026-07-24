@@ -5,12 +5,15 @@ import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
-import io.ktor.client.request.header
 import io.ktor.serialization.kotlinx.json.json
 
 actual class ClientProvider {
 
-    private val BASE_URL = "https://api.openweathermap.org/data/2.5/"
+    companion object {
+        private const val BASE_URL = "https://api.openweathermap.org/"
+        private const val API_KEY = "appid"
+    }
+
 
     actual fun createHttpClient(apiKey: String): HttpClient {
         return HttpClient(OkHttp) {
@@ -25,7 +28,9 @@ actual class ClientProvider {
             }
             defaultRequest {
                 url(BASE_URL)
-                header("appid", apiKey)
+                url {
+                    parameters.append(API_KEY, apiKey)
+                }
             }
         }
     }
