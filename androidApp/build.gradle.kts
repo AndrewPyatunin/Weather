@@ -17,8 +17,11 @@ dependencies {
     implementation(project(":sharedUI"))
 
     implementation(libs.androidx.activity.compose)
-
+    implementation(libs.androidx.navigation.runtime.ktx)
+    implementation(libs.compose.material3)
+    implementation(libs.compose.runtime)
     implementation(libs.compose.uiToolingPreview)
+    implementation(libs.androidx.navigation.compose)
     debugImplementation(libs.compose.uiTooling)
 }
 
