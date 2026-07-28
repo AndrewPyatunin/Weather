@@ -21,7 +21,6 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import com.andreich.weather.ext.AppBarState
 import com.andreich.weather.ext.WeatherFabState
-import com.andreich.weather.ext.WeatherItem
 import com.andreich.weather.presentation.core.UiMessage
 import com.andreich.weather.presentation.weatherlist.WeatherListEvent
 import com.andreich.weather.presentation.weatherlist.WeatherListIntent
@@ -123,11 +122,13 @@ fun WeatherListRoute(
         )
     }
     LaunchedEffect(viewModel) {
+        viewModel.sendIntent(WeatherListIntent.UpdateCitiesImages)
         viewModel.sendIntent(WeatherListIntent.UpdateWeather)
         viewModel.sendIntent(WeatherListIntent.ObserveWeather)
         viewModel.events.collect {
             when (it) {
                 is WeatherListEvent.NavigateToDetails -> onWeatherDetailsNavigate(it.id)
+                is WeatherListEvent.GetCityImage -> viewModel.sendIntent(WeatherListIntent.ObserveCitiesImages(it.id))
             }
         }
     }

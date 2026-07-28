@@ -16,4 +16,10 @@ sealed interface RequestType {
 
     @Serializable
     data class WeatherRequestEn(val country: String) : RequestType
+
+    @Serializable
+    data class CitiesImagesForCountryRequest(val country: String) : RequestType
+
+    @Serializable
+    data class CityImageRequest(val id: Int) : RequestType
 }

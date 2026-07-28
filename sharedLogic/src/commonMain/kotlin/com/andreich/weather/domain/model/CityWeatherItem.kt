@@ -7,5 +7,6 @@ data class CityWeatherItem(
     val id: Int,
     val name: String,
     val temp: Double,
-    val description: String
+    val description: String,
+    val image: String? = null
 )

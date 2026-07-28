@@ -1,8 +1,12 @@
 package com.andreich.weather.di
 
+import com.andreich.weather.domain.usecase.GetCitiesImagesUseCase
+import com.andreich.weather.domain.usecase.GetCityImageUseCase
 import com.andreich.weather.domain.usecase.GetCityListUseCase
 import com.andreich.weather.domain.usecase.GetCityWeatherInfoUseCase
 import com.andreich.weather.domain.usecase.SearchCityUseCase
+import com.andreich.weather.domain.usecase.UpdateCitiesImagesUseCase
+import com.andreich.weather.domain.usecase.UpdateCityImageUseCase
 import com.andreich.weather.domain.usecase.UpdateCityWeatherListUseCase
 import com.andreich.weather.domain.usecase.UpdateSearchCityWeatherUseCase
 import org.koin.dsl.module
@@ -22,5 +26,17 @@ val domainModule = module {
     }
     factory {
         UpdateSearchCityWeatherUseCase(get())
+    }
+    factory {
+        GetCityImageUseCase(get())
+    }
+    factory {
+        UpdateCitiesImagesUseCase(get())
+    }
+    factory {
+        GetCitiesImagesUseCase(get())
+    }
+    factory {
+        UpdateCityImageUseCase(get())
     }
 }

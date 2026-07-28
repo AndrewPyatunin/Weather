@@ -3,6 +3,8 @@ package com.andreich.weather.domain.model
 sealed interface RequestResult {
     data object Success : RequestResult
 
+    data object Undefined : RequestResult
+
     sealed interface Failure : RequestResult {
 
         data class NotFound(val message: String) : Failure

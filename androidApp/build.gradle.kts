@@ -32,6 +32,10 @@ dependencies {
 
     implementation(libs.ktor.client.core)
     implementation(libs.ktor.client.content.negotiation)
+
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.ktor)
+    implementation(libs.coil.network.okhttp3)
 }
 
 android {
@@ -57,6 +61,11 @@ android {
             type = "String",
             name = "API_KEY",
             value = "\"${localProperties.getProperty("API_KEY")}\"",
+        )
+        buildConfigField(
+            type = "String",
+            name = "CLIENT_ID",
+            value = "\"${localProperties.getProperty("CLIENT_ID")}\"",
         )
     }
     packaging {

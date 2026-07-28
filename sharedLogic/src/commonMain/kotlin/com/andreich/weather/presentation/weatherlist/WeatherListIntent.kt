@@ -8,6 +8,10 @@ sealed interface WeatherListIntent : UiIntent {
 
     object UpdateWeather : WeatherListIntent
 
+    object UpdateCitiesImages : WeatherListIntent
+
+    class ObserveCitiesImages(val id: Int) : WeatherListIntent
+
     object LoadNextPage : WeatherListIntent
 
     object ShowMenu : WeatherListIntent

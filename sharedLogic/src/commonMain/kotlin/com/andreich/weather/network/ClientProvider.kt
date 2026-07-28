@@ -5,4 +5,6 @@ import io.ktor.client.HttpClient
 expect class ClientProvider {
 
     fun createHttpClient(apiKey: String): HttpClient
+
+    fun createHttpCityImageClient(clientId: String): HttpClient
 }

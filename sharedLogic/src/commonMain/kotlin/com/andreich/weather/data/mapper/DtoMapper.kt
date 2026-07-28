@@ -1,14 +1,16 @@
 package com.andreich.weather.data.mapper
 
+import com.andreich.weather.domain.model.CityImage
 import com.andreich.weather.domain.model.CityWeather
+import com.andreich.weather.network.ImageUrlsDto
 import com.andreich.weather.network.ResponseDto
 
 fun ResponseDto.toCityWeather(id: Int, name: String, lang: String, population: Int): CityWeather {
     return CityWeather(
         id = id,
-        name = this.name ?: name,
         lon = coordDto?.lon ?: 0.0,
         lat = coordDto?.lat ?: 0.0,
+        name = this.name ?: name,
         temp = mainDto?.temp ?: 0.0,
         feelsLike = mainDto?.feelsLike ?: 0.0,
         humidity = mainDto?.humidity ?: 0,
@@ -27,5 +29,15 @@ fun ResponseDto.toCityWeather(id: Int, name: String, lang: String, population: I
         timezone = timezone ?: 0,
         lang = lang,
         population = population
+    )
+}
+
+fun ImageUrlsDto.toCityImage(id: Int, name: String, country: String): CityImage {
+    return CityImage(
+        id = id,
+        name = name,
+        country = country,
+        regular = regular ?: small ?: full ?: raw ?: "",
+        thumb = thumb ?: small ?: ""
     )
 }
