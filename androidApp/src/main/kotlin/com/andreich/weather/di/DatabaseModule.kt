@@ -3,6 +3,7 @@ package com.andreich.weather.di
 import android.content.Context
 import com.andreich.weather.database.CacheDao
 import com.andreich.weather.database.CityImageDao
+import com.andreich.weather.database.ForecastWeatherDao
 import com.andreich.weather.database.WeatherDao
 import com.andreich.weather.database.WeatherDatabase
 import com.andreich.weather.database.WeatherDatabaseFactory
@@ -23,5 +24,8 @@ fun databaseModule(context: Context) = module {
     }
     single<CityImageDao> {
         get<WeatherDatabase>().cityImageDao()
+    }
+    single<ForecastWeatherDao> {
+        get<WeatherDatabase>().forecastWeatherDao()
     }
 }

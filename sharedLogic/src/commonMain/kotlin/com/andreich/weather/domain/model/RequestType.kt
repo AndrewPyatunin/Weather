@@ -22,4 +22,7 @@ sealed interface RequestType {
 
     @Serializable
     data class CityImageRequest(val id: Int) : RequestType
+
+    @Serializable
+    data class WeatherForecastRequest(val name: String, val country: String) : RequestType
 }

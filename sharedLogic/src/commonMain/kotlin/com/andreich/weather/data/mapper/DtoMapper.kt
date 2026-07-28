@@ -1,9 +1,13 @@
 package com.andreich.weather.data.mapper
 
+import com.andreich.weather.database.CityWeatherForecastEntity
 import com.andreich.weather.domain.model.CityImage
 import com.andreich.weather.domain.model.CityWeather
+import com.andreich.weather.domain.model.Weather
+import com.andreich.weather.network.ForecastResponseDto
 import com.andreich.weather.network.ImageUrlsDto
 import com.andreich.weather.network.ResponseDto
+import com.andreich.weather.network.WeatherListDto
 
 fun ResponseDto.toCityWeather(id: Int, name: String, lang: String, population: Int): CityWeather {
     return CityWeather(
@@ -39,5 +43,32 @@ fun ImageUrlsDto.toCityImage(id: Int, name: String, country: String): CityImage 
         country = country,
         regular = regular ?: small ?: full ?: raw ?: "",
         thumb = thumb ?: small ?: ""
+    )
+}
+
+fun ForecastResponseDto.toCityWeatherForecastEntity(id: Int, name: String): CityWeatherForecastEntity {
+    return CityWeatherForecastEntity(
+        id = id,
+        cityName = city?.name ?: name,
+        weatherForecastList = weatherList.map { it.toWeather() },
+        isFavorite = false
+    )
+}
+
+fun WeatherListDto.toWeather(): Weather {
+    return Weather(
+        temp = main?.temp ?: 0.0,
+        feelsLike = main?.feelsLike ?: 0.0,
+        dt = dt ?: 0,
+        humidity = main?.humidity ?: 0,
+        pressure = main?.pressure ?: 0,
+        description = weather[0].description ?: "",
+        icon = weather[0].icon ?: "",
+        weatherMain = weather[0].main ?: "",
+        visibility = visibility ?: 0,
+        windSpeed = wind?.speed ?: 0.0,
+        windDirectionDeg = wind?.deg ?: 0,
+        clouds = clouds?.all ?: 0,
+        dtTxt = dtTxt ?: ""
     )
 }

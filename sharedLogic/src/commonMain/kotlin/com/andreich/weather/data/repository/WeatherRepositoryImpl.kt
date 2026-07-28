@@ -7,13 +7,17 @@ import com.andreich.weather.data.mapper.toCityImage
 import com.andreich.weather.data.mapper.toCityImageEntity
 import com.andreich.weather.data.mapper.toCityWeather
 import com.andreich.weather.data.mapper.toCityWeatherEntity
+import com.andreich.weather.data.mapper.toCityWeatherForecastEntity
+import com.andreich.weather.data.mapper.toCityWeatherForecastItem
 import com.andreich.weather.data.mapper.toCityWeatherItem
 import com.andreich.weather.database.CacheDao
 import com.andreich.weather.database.CacheEntity
 import com.andreich.weather.database.CityImageDao
+import com.andreich.weather.database.ForecastWeatherDao
 import com.andreich.weather.database.WeatherDao
 import com.andreich.weather.domain.model.CityImage
 import com.andreich.weather.domain.model.CityWeather
+import com.andreich.weather.domain.model.CityWeatherForecastItem
 import com.andreich.weather.domain.model.CityWeatherItem
 import com.andreich.weather.domain.model.RequestResult
 import com.andreich.weather.domain.model.RequestType
@@ -36,18 +40,21 @@ class WeatherRepositoryImpl(
     private val cityDatasource: CityDatasource,
     private val cityImageDao: CityImageDao,
     private val weatherDao: WeatherDao,
+    private val forecastWeatherDao: ForecastWeatherDao,
     private val cacheDao: CacheDao
 ) : WeatherRepository {
 
-    private val CACHE_EXPIRED = 600L
+    private val CACHE_EXPIRED = 900L
 
     override fun getCitiesList(lang: String, country: String): Flow<List<CityWeatherItem>> {
         return weatherDao.getCitiesWeather(lang, country, null)
             .map { list -> list.map { it.toCityWeatherItem() } }
     }
 
-    override fun getCityDetails(id: Int): Flow<CityWeather> {
-        return weatherDao.getCityWeather(id).map { it.toCityWeather() }
+    override fun getCityDetails(id: Int): Flow<CityWeatherForecastItem> {
+        return forecastWeatherDao.getForecastWeather(id).map { it.toCityWeatherForecastItem() }/*weatherDao.getCityWeather(id).map { it.toCityWeather() }*/
+    }
+
     override fun getCitiesImages(country: String): Flow<List<CityImage>> {
         return cityImageDao.getCountryCitiesImages(country)
             .map { list -> list.map { it.toCityImage() } }
@@ -66,8 +73,9 @@ class WeatherRepositoryImpl(
         return cityImageDao.getCityImage(id).map { it.toCityImage() }
     }
 
-    override fun searchCity(name: String, lang: String, country: String): Flow<List<CityWeatherItem>> {
-        return weatherDao.getCitiesWeather(lang, country, name).map { list -> list.map { it.toCityWeatherItem() } }
+    override suspend fun insertWeatherForecast(item: CityWeatherForecastItem) {
+        return forecastWeatherDao.insertForecastWeather(item.toCityWeatherForecastEntity()).apply {
+        }
     }
 
     override suspend fun updateCitiesList(lang: String, country: String): RequestResult {
@@ -79,6 +87,18 @@ class WeatherRepositoryImpl(
         val cacheData = cacheDao.getCacheData(type)
         cacheData?.time?.let { if (currentTime - it < CACHE_EXPIRED) return RequestResult.Undefined }
         return getRequestResult(type) { getCitiesApiCall(lang, country) }
+    }
+
+    override suspend fun updateWeatherForecast(
+        id: Int
+    ): RequestResult {
+        val city = getCities().find { it.id == id }
+        if (city == null) return RequestResult.Failure.NotFound("There is no city with this id")
+        val currentTime = Clock.System.now().epochSeconds
+        val type = RequestType.WeatherForecastRequest(city.name, city.country)
+        val cacheData = cacheDao.getCacheData(type)
+        cacheData?.time?.let { if (currentTime - it < CACHE_EXPIRED) return RequestResult.Undefined }
+        return getForecastWeatherApiCall(city.name, city.country, id)
     }
 
     override suspend fun updateCityWeatherInfo(name: String, lang: String): RequestResult {
@@ -173,7 +193,15 @@ class WeatherRepositoryImpl(
                 .filterNotNull()
         }
 
-    private suspend fun getRequestResult(type: RequestType, apiCall: suspend () -> List<CityWeather>): RequestResult {
+    private suspend fun getForecastWeatherApiCall(name: String, country: String, id: Int): RequestResult {
+        return safeApiCall(apiCall = {
+            weatherApi.getForecastWeatherForCity(name, country).toCityWeatherForecastEntity(id, name)
+        }) {
+            cacheDao.insertCacheData(CacheEntity(RequestType.WeatherForecastRequest(name, country)))
+            forecastWeatherDao.insertForecastWeather(it)
+        }
+    }
+
     private suspend fun getRequestResult(
         type: RequestType,
         apiCall: suspend () -> List<CityWeather>

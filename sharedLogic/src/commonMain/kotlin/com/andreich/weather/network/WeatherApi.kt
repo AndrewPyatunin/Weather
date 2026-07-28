@@ -12,6 +12,8 @@ class WeatherApi(
     companion object {
         const val CURRENT_WEATHER = "data/2.5/weather"
 
+        const val FORECAST_WEATHER = "data/2.5/forecast"
+
         const val UNITS = "units"
         const val METRIC = "metric"
         const val LANG = "lang"
@@ -53,5 +55,17 @@ class WeatherApi(
                 }
             }
         }.body<ResponseDto>()
+    }
+
+    suspend fun getForecastWeatherForCity(name: String, country: String): ForecastResponseDto {
+        return client.get {
+            url {
+                path(FORECAST_WEATHER)
+                parameters.apply {
+                    append(QUERY, "${name.normalizeCityName()},${country.uppercase()}")
+                    append(UNITS, METRIC)
+                }
+            }
+        }.body()
     }
 }

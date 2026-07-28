@@ -8,7 +8,7 @@ import org.koin.dsl.module
 
 fun dataModule(context: Context) = module {
     single<WeatherRepository> {
-        WeatherRepositoryImpl(get(), get(), get(), get())
+        WeatherRepositoryImpl(get(), get(), get(), get(), get(), get(), get())
     }
     single(createdAtStart = true) {
         CityDatasource(context)

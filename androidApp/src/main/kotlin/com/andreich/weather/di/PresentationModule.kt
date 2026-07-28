@@ -8,7 +8,4 @@ val presentationModule = module {
     viewModel<WeatherListViewModel> {
         WeatherListViewModel(get(), get(), get(), get())
     }
-    viewModel<WeatherDetailsViewModel> {
-        WeatherDetailsViewModel(get(), get(), get(), get(), get())
-    }
 }

@@ -2,8 +2,10 @@ package com.andreich.weather.data.mapper
 
 import com.andreich.weather.database.CityImageEntity
 import com.andreich.weather.database.CityWeatherEntity
+import com.andreich.weather.database.CityWeatherForecastEntity
 import com.andreich.weather.domain.model.CityImage
 import com.andreich.weather.domain.model.CityWeather
+import com.andreich.weather.domain.model.CityWeatherForecastItem
 import com.andreich.weather.domain.model.CityWeatherItem
 
 fun CityWeather.toCityWeatherEntity(): CityWeatherEntity {
@@ -76,5 +78,17 @@ fun CityImage.toCityImageEntity(): CityImageEntity {
 fun CityImageEntity.toCityImage(): CityImage {
     return CityImage(
         id, name, country, regularImage, thumbImage
+    )
+}
+
+fun CityWeatherForecastEntity.toCityWeatherForecastItem(): CityWeatherForecastItem {
+    return CityWeatherForecastItem(
+        id, cityName, weatherForecastList, isFavorite
+    )
+}
+
+fun CityWeatherForecastItem.toCityWeatherForecastEntity(): CityWeatherForecastEntity {
+    return CityWeatherForecastEntity(
+        id, cityName, forecastWeather, isFavorite
     )
 }

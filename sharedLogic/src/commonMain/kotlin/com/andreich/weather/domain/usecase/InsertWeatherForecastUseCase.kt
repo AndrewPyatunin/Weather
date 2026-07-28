@@ -2,13 +2,12 @@ package com.andreich.weather.domain.usecase
 
 import com.andreich.weather.domain.model.CityWeatherForecastItem
 import com.andreich.weather.domain.repository.WeatherRepository
-import kotlinx.coroutines.flow.Flow
 
-class GetCityWeatherInfoUseCase(
+class InsertWeatherForecastUseCase(
     private val repository: WeatherRepository
 ) {
 
-    operator fun invoke(id: Int): Flow<CityWeatherForecastItem> {
-        return repository.getCityDetails(id)
+    suspend operator fun invoke(item: CityWeatherForecastItem) {
+        return repository.insertWeatherForecast(item)
     }
 }
