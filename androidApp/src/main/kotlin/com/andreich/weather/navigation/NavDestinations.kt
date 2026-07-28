@@ -6,6 +6,8 @@ import kotlinx.serialization.Serializable
 sealed interface NavDestinations {
 
     @Serializable
+    data object HomeGraph : NavDestinations
+    @Serializable
     data object WeatherList : NavDestinations
 
     @Serializable
@@ -16,4 +18,7 @@ sealed interface NavDestinations {
 
     @Serializable
     data object WeatherMap : NavDestinations
+
+    @Serializable
+    data class WeatherForecast(val id: Int) : NavDestinations
 }

@@ -137,9 +137,10 @@ fun MainScreen(modifier: Modifier = Modifier) {
                 WeatherListRoute(
                     snackBarState,
                     onSetAppBarState = { appBarState.value = it },
-                    setFabState = { weatherFabState.value = it }) {
-
-                }
+                    setFabState = { weatherFabState.value = it },
+                    onWeatherDetailsNavigate = {
+                        navigationState.navigateTo(NavDestinations.WeatherForecast(it))
+                    })
             },
             weatherSearchContent = {
                 Text("WeatherSearch")
@@ -149,6 +150,11 @@ fun MainScreen(modifier: Modifier = Modifier) {
             },
             weatherMapContent = {
                 Text("WeatherMap")
+            },
+            weatherForecastContent = {
+                WeatherForecastRoute(snackBarState, it) { fabState ->
+                    weatherFabState.value = fabState
+                }
             }
         )
     }

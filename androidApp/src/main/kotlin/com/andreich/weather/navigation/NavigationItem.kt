@@ -10,7 +10,7 @@ sealed class NavigationItem(
 ) {
 
     object Home : NavigationItem(
-        NavDestinations.WeatherList,
+        NavDestinations.HomeGraph,
         R.string.app_name,
         R.drawable.home_24px
     )
