@@ -18,7 +18,7 @@ This is a Kotlin Multiplatform project targeting Android, iOS.
 
 ### Running the apps
 Add **API_KEY**=*your_api_key* into local.properties file, this api_key could be obtained from [OpenWeatherMap.org](https://openweathermap.org/).
-Also add **CLIENT_ID**=*your_Access Key* into local.properties, you can take it from [Unsplash.com/developers](https://unsplash.com/developers),
+Also add **CLIENT_ID**=*your_Access Key* into local.properties, you can take it from [Unsplash.com/developers](https://unsplash.com/developers), 
 unfortunately it can be used only with vpn.
 
 Use the run configurations provided by the run widget in your IDE's toolbar. You can also use these commands and options:
