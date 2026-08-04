@@ -1,9 +1,11 @@
 package com.andreich.weather.presentation.weatherdetail
 
+import com.andreich.weather.domain.model.FavoriteCity
 import com.andreich.weather.domain.model.RequestResult
 import com.andreich.weather.domain.usecase.GetCityImageUseCase
 import com.andreich.weather.domain.usecase.GetCityWeatherInfoUseCase
-import com.andreich.weather.domain.usecase.InsertWeatherForecastUseCase
+import com.andreich.weather.domain.usecase.GetFavoritesUseCase
+import com.andreich.weather.domain.usecase.InsertFavoriteCityUseCase
 import com.andreich.weather.domain.usecase.UpdateCityImageUseCase
 import com.andreich.weather.domain.usecase.UpdateWeatherForecastUseCase
 import com.andreich.weather.presentation.core.BaseViewModel
@@ -17,6 +19,7 @@ import kotlinx.coroutines.flow.update
 class WeatherDetailsViewModel(
     private val getCityImageUseCase: GetCityImageUseCase,
     private val getCityWeatherInfoUseCase: GetCityWeatherInfoUseCase,
+    private val getFavoritesUseCase: GetFavoritesUseCase,
     private val updateCityImageUseCase: UpdateCityImageUseCase,
     private val updateWeatherForecastUseCase: UpdateWeatherForecastUseCase,
     private val insertFavoriteUseCase: InsertFavoriteCityUseCase,
@@ -78,10 +81,19 @@ class WeatherDetailsViewModel(
                 }
 
                 WeatherDetailsIntent.AddToFavorite -> {
-                    state.value.cityWeather?.let { insertWeatherForecastUseCase(it.copy(isFavorite = true)) }
+                    state.value.cityWeather?.let { insertFavoriteUseCase(FavoriteCity(it.id, it.cityName)) }
                 }
                 WeatherDetailsIntent.RemoveFromFavorite -> {
-                    state.value.cityWeather?.let { insertWeatherForecastUseCase(it.copy(isFavorite = false)) }
+                    state.value.cityWeather?.let { insertFavoriteUseCase(FavoriteCity(it.id, it.cityName)) }
+                }
+
+                is WeatherDetailsIntent.ObserveFavorites -> {
+                    getFavoritesUseCase()
+                        .onEach { favoriteCities ->
+                            favoriteCities.find { it.id == intent.id }?.let {
+                                _state.update { it.copy(isFavorite = true) }
+                            } ?: _state.update { it.copy(isFavorite = false) }
+                        }.collect()
                 }
             }
         }

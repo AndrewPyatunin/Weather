@@ -3,6 +3,7 @@ package com.andreich.weather.domain.repository
 import com.andreich.weather.domain.model.CityImage
 import com.andreich.weather.domain.model.CityWeatherForecastItem
 import com.andreich.weather.domain.model.CityWeatherItem
+import com.andreich.weather.domain.model.FavoriteCity
 import com.andreich.weather.domain.model.RequestResult
 import kotlinx.coroutines.flow.Flow
 
@@ -18,7 +19,9 @@ interface WeatherRepository {
 
     fun getCityImage(id: Int): Flow<CityImage>
 
-    suspend fun insertWeatherForecast(item: CityWeatherForecastItem)
+    fun getFavorites(): Flow<List<FavoriteCity>>
+
+    suspend fun insertFavoriteCity(city: FavoriteCity)
 
     suspend fun updateCitiesList(lang: String, country: String): RequestResult
 

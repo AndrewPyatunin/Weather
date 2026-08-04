@@ -10,15 +10,19 @@ import com.andreich.weather.data.mapper.toCityWeatherEntity
 import com.andreich.weather.data.mapper.toCityWeatherForecastEntity
 import com.andreich.weather.data.mapper.toCityWeatherForecastItem
 import com.andreich.weather.data.mapper.toCityWeatherItem
+import com.andreich.weather.data.mapper.toFavoriteCity
+import com.andreich.weather.data.mapper.toFavoriteCityEntity
 import com.andreich.weather.database.CacheDao
 import com.andreich.weather.database.CacheEntity
 import com.andreich.weather.database.CityImageDao
+import com.andreich.weather.database.FavoriteCityDao
 import com.andreich.weather.database.ForecastWeatherDao
 import com.andreich.weather.database.WeatherDao
 import com.andreich.weather.domain.model.CityImage
 import com.andreich.weather.domain.model.CityWeather
 import com.andreich.weather.domain.model.CityWeatherForecastItem
 import com.andreich.weather.domain.model.CityWeatherItem
+import com.andreich.weather.domain.model.FavoriteCity
 import com.andreich.weather.domain.model.RequestResult
 import com.andreich.weather.domain.model.RequestType
 import com.andreich.weather.domain.repository.WeatherRepository
@@ -42,7 +46,8 @@ class WeatherRepositoryImpl(
     private val cityImageDao: CityImageDao,
     private val weatherDao: WeatherDao,
     private val forecastWeatherDao: ForecastWeatherDao,
-    private val cacheDao: CacheDao
+    private val cacheDao: CacheDao,
+    private val favoriteCityDao: FavoriteCityDao
 ) : WeatherRepository {
 
     private val CACHE_EXPIRED = 900L
@@ -74,9 +79,13 @@ class WeatherRepositoryImpl(
         return cityImageDao.getCityImage(id).map { it.toCityImage() }
     }
 
-    override suspend fun insertWeatherForecast(item: CityWeatherForecastItem) {
-        return forecastWeatherDao.insertForecastWeather(item.toCityWeatherForecastEntity()).apply {
-        }
+    override fun getFavorites(): Flow<List<FavoriteCity>> {
+        return favoriteCityDao.getFavorites()
+            .map { favoriteCities -> favoriteCities.map { it.toFavoriteCity() } }
+    }
+
+    override suspend fun insertFavoriteCity(city: FavoriteCity) {
+        return favoriteCityDao.insertFavoriteCity(city.toFavoriteCityEntity())
     }
 
     override suspend fun updateCitiesList(lang: String, country: String): RequestResult {
@@ -151,7 +160,7 @@ class WeatherRepositoryImpl(
                     )
                 }
             else emptyList()
-            }) {
+        }) {
             putCityImageIntoDatabase(country, cityImages = it)
         }
     }
@@ -168,7 +177,6 @@ class WeatherRepositoryImpl(
                 cacheDao.insertCacheData(CacheEntity(RequestType.CityImageRequest(id)))
                 cityImageDao.insertCityImage(it.toCityImageEntity())
             }
-
         }
     }
 

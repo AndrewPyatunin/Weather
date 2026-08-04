@@ -1,7 +1,6 @@
 package com.andreich.weather.ui
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
@@ -89,7 +88,6 @@ fun WeatherListScreen(
     }
     LazyColumn(
         modifier = Modifier
-            .fillMaxSize()
             .background(color = MaterialTheme.colorScheme.background),
         state = lazyListState
     ) {

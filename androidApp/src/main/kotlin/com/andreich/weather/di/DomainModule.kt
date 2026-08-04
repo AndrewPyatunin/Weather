@@ -4,7 +4,8 @@ import com.andreich.weather.domain.usecase.GetCitiesImagesUseCase
 import com.andreich.weather.domain.usecase.GetCityImageUseCase
 import com.andreich.weather.domain.usecase.GetCityListUseCase
 import com.andreich.weather.domain.usecase.GetCityWeatherInfoUseCase
-import com.andreich.weather.domain.usecase.InsertWeatherForecastUseCase
+import com.andreich.weather.domain.usecase.GetFavoritesUseCase
+import com.andreich.weather.domain.usecase.InsertFavoriteCityUseCase
 import com.andreich.weather.domain.usecase.SearchCityUseCase
 import com.andreich.weather.domain.usecase.UpdateCitiesImagesUseCase
 import com.andreich.weather.domain.usecase.UpdateCityImageUseCase
@@ -45,6 +46,9 @@ val domainModule = module {
         UpdateWeatherForecastUseCase(get())
     }
     factory {
-        InsertWeatherForecastUseCase(get())
+        InsertFavoriteCityUseCase(get())
+    }
+    factory {
+        GetFavoritesUseCase(get())
     }
 }

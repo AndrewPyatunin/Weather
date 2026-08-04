@@ -3,10 +3,12 @@ package com.andreich.weather.data.mapper
 import com.andreich.weather.database.CityImageEntity
 import com.andreich.weather.database.CityWeatherEntity
 import com.andreich.weather.database.CityWeatherForecastEntity
+import com.andreich.weather.database.FavoriteCityEntity
 import com.andreich.weather.domain.model.CityImage
 import com.andreich.weather.domain.model.CityWeather
 import com.andreich.weather.domain.model.CityWeatherForecastItem
 import com.andreich.weather.domain.model.CityWeatherItem
+import com.andreich.weather.domain.model.FavoriteCity
 
 fun CityWeather.toCityWeatherEntity(): CityWeatherEntity {
     return CityWeatherEntity(
@@ -83,12 +85,20 @@ fun CityImageEntity.toCityImage(): CityImage {
 
 fun CityWeatherForecastEntity.toCityWeatherForecastItem(): CityWeatherForecastItem {
     return CityWeatherForecastItem(
-        id, cityName, weatherForecastList, isFavorite
+        id, cityName, weatherForecastList, timezone
     )
 }
 
 fun CityWeatherForecastItem.toCityWeatherForecastEntity(): CityWeatherForecastEntity {
     return CityWeatherForecastEntity(
-        id, cityName, forecastWeather, isFavorite
+        id, cityName, forecastWeather, timezone
     )
+}
+
+fun FavoriteCityEntity.toFavoriteCity(): FavoriteCity {
+    return FavoriteCity(id, name)
+}
+
+fun FavoriteCity.toFavoriteCityEntity(): FavoriteCityEntity {
+    return FavoriteCityEntity(id, name)
 }

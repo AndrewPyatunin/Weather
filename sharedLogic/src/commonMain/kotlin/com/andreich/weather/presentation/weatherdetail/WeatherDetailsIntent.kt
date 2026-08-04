@@ -12,6 +12,8 @@ sealed interface WeatherDetailsIntent : UiIntent {
 
     class UpdateImage(val id: Int) : WeatherDetailsIntent
 
+    class ObserveFavorites(val id: Int) : WeatherDetailsIntent
+
     object AddToFavorite : WeatherDetailsIntent
 
     object RemoveFromFavorite : WeatherDetailsIntent

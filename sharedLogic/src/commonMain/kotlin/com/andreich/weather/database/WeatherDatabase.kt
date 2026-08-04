@@ -8,7 +8,8 @@ import androidx.room.TypeConverters
     entities = [CityWeatherEntity::class,
         CacheEntity::class,
         CityImageEntity::class,
-        CityWeatherForecastEntity::class
+        CityWeatherForecastEntity::class,
+        FavoriteCityEntity::class
     ],
     version = 1,
     exportSchema = true
@@ -23,4 +24,6 @@ abstract class WeatherDatabase : RoomDatabase() {
     abstract fun cityImageDao(): CityImageDao
 
     abstract fun forecastWeatherDao(): ForecastWeatherDao
+
+    abstract fun favoriteCityDao(): FavoriteCityDao
 }
