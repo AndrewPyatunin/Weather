@@ -19,7 +19,7 @@ class WeatherDetailsViewModel(
     private val getCityWeatherInfoUseCase: GetCityWeatherInfoUseCase,
     private val updateCityImageUseCase: UpdateCityImageUseCase,
     private val updateWeatherForecastUseCase: UpdateWeatherForecastUseCase,
-    private val insertWeatherForecastUseCase: InsertWeatherForecastUseCase
+    private val insertFavoriteUseCase: InsertFavoriteCityUseCase,
     private val uiDataBuilder: UiDataBuilder
 ) : BaseViewModel<WeatherDetailsState, WeatherDetailsEvent, WeatherDetailsIntent>(
     initialState = WeatherDetailsState()
