@@ -17,4 +17,6 @@ data class Weather(
     val windDirectionDeg: Int,
     val clouds: Int,
     val dtTxt: String,
+    val sunrise: Int,
+    val sunset: Int
 )

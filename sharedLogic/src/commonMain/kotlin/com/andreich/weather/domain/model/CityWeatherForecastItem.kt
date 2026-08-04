@@ -7,5 +7,5 @@ data class CityWeatherForecastItem(
     val id: Int,
     val cityName: String,
     val forecastWeather: List<Weather>,
-    val isFavorite: Boolean
+    val timezone: Int
 )

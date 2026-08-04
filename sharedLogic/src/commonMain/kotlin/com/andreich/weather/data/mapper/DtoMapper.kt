@@ -50,12 +50,12 @@ fun ForecastResponseDto.toCityWeatherForecastEntity(id: Int, name: String): City
     return CityWeatherForecastEntity(
         id = id,
         cityName = city?.name ?: name,
-        weatherForecastList = weatherList.map { it.toWeather() },
-        isFavorite = false
+        weatherForecastList = weatherList.map { dto ->
+            dto.toWeather(city?.sunrise ?: 0, city?.sunset ?: 0) },
+        timezone = city?.timezone ?: 0
     )
 }
-
-fun WeatherListDto.toWeather(): Weather {
+fun WeatherListDto.toWeather(sunrise: Int, sunset: Int): Weather {
     return Weather(
         temp = main?.temp ?: 0.0,
         feelsLike = main?.feelsLike ?: 0.0,
@@ -69,6 +69,8 @@ fun WeatherListDto.toWeather(): Weather {
         windSpeed = wind?.speed ?: 0.0,
         windDirectionDeg = wind?.deg ?: 0,
         clouds = clouds?.all ?: 0,
-        dtTxt = dtTxt ?: ""
+        dtTxt = dtTxt ?: "",
+        sunrise = sunrise,
+        sunset = sunset
     )
 }

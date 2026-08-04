@@ -48,10 +48,12 @@ kotlin {
             implementation(libs.compose.components.resources)
             implementation(libs.androidx.room.runtime)
             implementation(libs.androidx.sqlite.bundled)
+            implementation(libs.kotlinx.datetime)
             // put your Multiplatform dependencies here
         }
         androidMain.dependencies {
 
+            implementation(libs.kotlinx.datetime)
             implementation(libs.ktor.client.okhttp)
         }
         iosMain.dependencies {

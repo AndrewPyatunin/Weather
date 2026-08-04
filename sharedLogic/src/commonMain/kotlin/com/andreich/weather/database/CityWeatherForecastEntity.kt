@@ -10,5 +10,5 @@ data class CityWeatherForecastEntity(
     val id: Int,
     val cityName: String,
     val weatherForecastList: List<Weather>,
-    val isFavorite: Boolean
+    val timezone: Int
 )

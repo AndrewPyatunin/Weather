@@ -29,6 +29,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlin.collections.map
@@ -52,7 +53,7 @@ class WeatherRepositoryImpl(
     }
 
     override fun getCityDetails(id: Int): Flow<CityWeatherForecastItem> {
-        return forecastWeatherDao.getForecastWeather(id).map { it.toCityWeatherForecastItem() }/*weatherDao.getCityWeather(id).map { it.toCityWeather() }*/
+        return forecastWeatherDao.getForecastWeather(id).filterNotNull().map { it.toCityWeatherForecastItem() }
     }
 
     override fun getCitiesImages(country: String): Flow<List<CityImage>> {
@@ -193,12 +194,25 @@ class WeatherRepositoryImpl(
                 .filterNotNull()
         }
 
-    private suspend fun getForecastWeatherApiCall(name: String, country: String, id: Int): RequestResult {
+    private suspend fun getForecastWeatherApiCall(
+        name: String,
+        country: String,
+        id: Int
+    ): RequestResult {
         return safeApiCall(apiCall = {
-            weatherApi.getForecastWeatherForCity(name, country).toCityWeatherForecastEntity(id, name)
+            val weather = weatherApi.getForecastWeatherForCity(name, country)
+            if (weather.weatherList.isNotEmpty()) {
+                weather.toCityWeatherForecastEntity(id, name)
+            } else null
+
         }) {
-            cacheDao.insertCacheData(CacheEntity(RequestType.WeatherForecastRequest(name, country)))
-            forecastWeatherDao.insertForecastWeather(it)
+            it?.let {
+                cacheDao.insertCacheData(
+                    CacheEntity(RequestType.WeatherForecastRequest(name, country))
+                )
+                forecastWeatherDao.insertForecastWeather(it)
+            }
+
         }
     }
 

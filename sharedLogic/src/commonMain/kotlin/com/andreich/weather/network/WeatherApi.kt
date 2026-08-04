@@ -57,13 +57,14 @@ class WeatherApi(
         }.body<ResponseDto>()
     }
 
-    suspend fun getForecastWeatherForCity(name: String, country: String): ForecastResponseDto {
+    suspend fun getForecastWeatherForCity(name: String, country: String, lang: String = RU): ForecastResponseDto {
         return client.get {
             url {
                 path(FORECAST_WEATHER)
                 parameters.apply {
                     append(QUERY, "${name.normalizeCityName()},${country.uppercase()}")
                     append(UNITS, METRIC)
+                    append(LANG, lang)
                 }
             }
         }.body()

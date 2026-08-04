@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Погода</string>
+    <string name="weather_in_city">Погода в %1$s</string>
+    <string name="home">Главная</string>
+    <string name="favorite">Избранное</string>
+    <string name="map">Карта</string>
+    <string name="search">Поиск</string>
+    <string name="weather_today">Погода сегодня</string>
+    <string name="wind_speed">%1$s м/с</string>
+    <string-array name="month">
+        <item>Января</item>
+        <item>Февраля</item>
+        <item>Марта</item>
+        <item>Апреля</item>
+        <item>Мая</item>
+        <item>Июня</item>
+        <item>Июля</item>
+        <item>Августа</item>
+        <item>Сентября</item>
+        <item>Октября</item>
+        <item>Ноября</item>
+        <item>Декабря</item>
+    </string-array>
+    <string-array name="wind_direction">
+        <item>С</item>
+        <item>СЗ</item>
+        <item>З</item>
+        <item>ЮЗ</item>
+        <item>Ю</item>
+        <item>ЮВ</item>
+        <item>В</item>
+        <item>СВ</item>
+    </string-array>
+</resources>

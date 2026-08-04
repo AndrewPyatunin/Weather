@@ -1,3 +1,44 @@
 <resources>
     <string name="app_name">Weather</string>
+    <string name="weather_in_city">Weather in %1$s</string>
+    <string name="home">Home</string>
+    <string name="favorite">Favorite</string>
+    <string name="map">Map</string>
+    <string name="search">Search</string>
+    <string name="weather_today">Weather today</string>
+    <string name="wind_speed">%1$s m/s</string>
+    <string-array name="month">
+        <item>of January</item>
+        <item>of February</item>
+        <item>of March</item>
+        <item>of April</item>
+        <item>of May</item>
+        <item>of June</item>
+        <item>of July</item>
+        <item>of August</item>
+        <item>of September</item>
+        <item>of October</item>
+        <item>of November</item>
+        <item>of December</item>
+    </string-array>
+    <string-array name="hour" translatable="false">
+        <item>00:00</item>
+        <item>03:00</item>
+        <item>06:00</item>
+        <item>09:00</item>
+        <item>12:00</item>
+        <item>15:00</item>
+        <item>18:00</item>
+        <item>21:00</item>
+    </string-array>
+    <string-array name="wind_direction">
+        <item>N</item>
+        <item>NW</item>
+        <item>W</item>
+        <item>SW</item>
+        <item>S</item>
+        <item>SE</item>
+        <item>E</item>
+        <item>NE</item>
+    </string-array>
 </resources>

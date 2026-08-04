@@ -59,7 +59,7 @@ fun WeatherItem(weatherItem: CityWeatherItem, onClick: () -> Unit) {
             Column(modifier = Modifier
                 .padding(horizontal = 4.dp)
                 .weight(2f)) {
-                Text(text = "${weatherItem.name}: ${weatherItem.temp}℃", fontSize = 18.sp)
+                Text(text = "${weatherItem.name}: ${weatherItem.temp.toInt()}℃", fontSize = 18.sp)
                 Text(text = weatherItem.description, fontSize = 14.sp, overflow = TextOverflow.Ellipsis, maxLines = 5)
             }
         }

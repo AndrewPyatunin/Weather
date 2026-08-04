@@ -1,6 +1,7 @@
 package com.andreich.weather
 
 import android.app.Application
+import androidx.core.os.ConfigurationCompat
 import com.andreich.weather.di.dataModule
 import com.andreich.weather.di.databaseModule
 import com.andreich.weather.di.domainModule
@@ -17,7 +18,7 @@ class WeatherApp : Application() {
         startKoin {
             modules(
                 uiModule(applicationContext),
-                presentationModule,
+                presentationModule(ConfigurationCompat.getLocales(resources.configuration)[0]!!),
                 networkModule(apiKey, clientId),
                 domainModule,
                 dataModule(applicationContext),

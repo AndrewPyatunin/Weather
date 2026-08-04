@@ -36,6 +36,8 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.coil.network.ktor)
     implementation(libs.coil.network.okhttp3)
+
+    implementation(libs.kotlinx.datetime)
 }
 
 android {

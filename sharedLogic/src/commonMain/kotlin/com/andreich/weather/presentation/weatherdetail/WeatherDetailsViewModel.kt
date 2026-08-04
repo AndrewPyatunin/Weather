@@ -7,6 +7,7 @@ import com.andreich.weather.domain.usecase.InsertWeatherForecastUseCase
 import com.andreich.weather.domain.usecase.UpdateCityImageUseCase
 import com.andreich.weather.domain.usecase.UpdateWeatherForecastUseCase
 import com.andreich.weather.presentation.core.BaseViewModel
+import com.andreich.weather.presentation.core.UiDataBuilder
 import com.andreich.weather.presentation.core.UiMessage
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
@@ -19,6 +20,7 @@ class WeatherDetailsViewModel(
     private val updateCityImageUseCase: UpdateCityImageUseCase,
     private val updateWeatherForecastUseCase: UpdateWeatherForecastUseCase,
     private val insertWeatherForecastUseCase: InsertWeatherForecastUseCase
+    private val uiDataBuilder: UiDataBuilder
 ) : BaseViewModel<WeatherDetailsState, WeatherDetailsEvent, WeatherDetailsIntent>(
     initialState = WeatherDetailsState()
 ) {
@@ -35,8 +37,11 @@ class WeatherDetailsViewModel(
                 is WeatherDetailsIntent.ObserveWeather -> {
                     getCityWeatherInfoUseCase(intent.id).onStart {
                         _state.update { it.copy(isLoading = true) }
-                    }.onEach { weather ->
-                        _state.update { it.copy(cityWeather = weather, isFavorite = weather.isFavorite) }
+                    }.onEach { forecastItem ->
+                        _state.update { it.copy(cityWeather = CityWeatherForecastUiItem(
+                            forecastItem.id, forecastItem.cityName, uiDataBuilder.makeForecastWeatherItemList(
+                            forecastItem.forecastWeather, forecastItem.timezone
+                        )), isLoading = false) }
                     }.collect()
                 }
 
@@ -56,6 +61,7 @@ class WeatherDetailsViewModel(
                     }
                 }
                 is WeatherDetailsIntent.UpdateWeather -> {
+                    _state.update { it.copy(id = intent.id) }
                     when(val result = updateWeatherForecastUseCase(intent.id)) {
                         is RequestResult.Failure.InvalidApiKey -> showError(result.message)
                         is RequestResult.Failure.InvalidParams -> showError(result.message)

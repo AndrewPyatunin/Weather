@@ -12,6 +12,6 @@ interface ForecastWeatherDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertForecastWeather(cityWeatherForecastEntity: CityWeatherForecastEntity)
 
-    @Query("SELECT * FROM forecast_weather WHERE :id = id LIMIT 1")
-    fun getForecastWeather(id: Int): Flow<CityWeatherForecastEntity>
+    @Query("SELECT * FROM forecast_weather WHERE id = :id")
+    fun getForecastWeather(id: Int): Flow<CityWeatherForecastEntity?>
 }
